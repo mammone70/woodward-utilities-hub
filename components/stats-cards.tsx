@@ -1,14 +1,11 @@
+"use client"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useBills } from "@/hooks/use-bills"
 import { Receipt, DollarSign, TrendingUp, FileText } from "lucide-react"
 
-interface StatsCardsProps {
-  totalBills: number
-  totalPayments: number
-  balance: number
-  billCount: number
-}
 
-export function StatsCards({ totalBills, totalPayments, balance, billCount }: StatsCardsProps) {
+export function StatsCards() {
+  const { totalBills, totalPayments, balance, billCount } = useBills(1);
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
       <Card>
@@ -40,7 +37,7 @@ export function StatsCards({ totalBills, totalPayments, balance, billCount }: St
         </CardHeader>
         <CardContent>
           <div
-            className={`text-2xl font-bold ${balance > 0 ? "text-red-600" : balance < 0 ? "text-green-600" : "text-gray-900"}`}
+            className={`text-2xl font-bold ${balance < 0 ? "text-red-600" : balance > 0 ? "text-green-600" : "text-gray-900"}`}
           >
             ${Math.abs(balance).toFixed(2)}
           </div>

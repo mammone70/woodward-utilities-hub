@@ -19,14 +19,6 @@ import { BillsTable } from "@/components/bills-table"
 const CURRENT_USER_ID = 1
 
 export default async function Dashboard() {
-  // const { totalBills, totalPayments, balance, billCount, unpaidBills } = await getBillingSummary(CURRENT_USER_ID)
-  const { totalBills, totalPayments, balance, billCount, unpaidBills } = {
-    totalBills: 0,
-    totalPayments: 0,
-    balance: 0,
-    billCount: 0,
-    unpaidBills: 0
-  }
 
   const billsResult = await getBillsByUserIdAction({userId: CURRENT_USER_ID})
   
@@ -62,8 +54,8 @@ export default async function Dashboard() {
           </div>
 
           {/* Stats Cards */}
-          <StatsCards totalBills={totalBills} totalPayments={totalPayments} balance={balance} billCount={billCount} />
-
+          <StatsCards />
+          
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <Dialog>
