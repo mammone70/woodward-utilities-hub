@@ -11,6 +11,7 @@ import { TBill } from "@/schemas/bills-schemas"
 import { TBillTypes } from "@/schemas/bill-types-schemas"
 import { useBills } from "@/hooks/use-bills"
 import { useRouter } from "next/navigation"
+import { useToast } from "@/hooks/use-toast"
 
 export const billFormSchema = z.object({
     typeId: z.number().min(1, "Bill type is required"),
@@ -25,11 +26,13 @@ interface BillFormProps {
   initialData?: TBill
   userId?: number
   billTypes: TBillTypes[]
+  onSuccess?: () => void
 }
 
-export function BillForm({ initialData, userId, billTypes }: BillFormProps) {
+export function BillForm({ initialData, userId, billTypes, onSuccess }: BillFormProps) {
   const router = useRouter()
   const { addBill, updateBill } = useBills(userId!)
+  const { toast } = useToast()
 
   const form = useForm<BillFormValues>({
     resolver: zodResolver(billFormSchema),
@@ -58,6 +61,11 @@ export function BillForm({ initialData, userId, billTypes }: BillFormProps) {
           amount: values.amount,
           paid: values.paid,
         })
+        toast({
+          title: "Success",
+          description: "Bill updated successfully",
+          className: "bg-green-500 text-white",
+        })
       } else {
         await addBill.mutateAsync({
           userId: userId!,
@@ -66,11 +74,21 @@ export function BillForm({ initialData, userId, billTypes }: BillFormProps) {
           amount: values.amount,
           paid: values.paid,
         })
+        toast({
+          title: "Success",
+          description: "Bill added successfully",
+          className: "bg-green-500 text-white",
+        })
       }
-      router.refresh()
       form.reset()
+      onSuccess?.()
     } catch (error) {
       console.error("Failed to save bill:", error)
+      toast({
+        title: "Error",
+        description: "Failed to save bill. Please try again.",
+        variant: "destructive",
+      })
     }
   }
 

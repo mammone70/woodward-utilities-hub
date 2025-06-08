@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation"
 import { TBill } from "@/schemas/bills-schemas"
 import { TBillTypes } from "@/schemas/bill-types-schemas"
 import { useBills } from "@/hooks/use-bills"
+import { useToast } from "@/hooks/use-toast"
 
 interface BillActionsProps {
   bill: TBill
@@ -19,13 +20,24 @@ export function BillActions({ bill, billTypes }: BillActionsProps) {
   const [isEditing, setIsEditing] = useState(false)
   const router = useRouter()
   const { deleteBill } = useBills(bill.userId)
+  const { toast } = useToast()
 
   const handleDelete = async () => {
     try {
       await deleteBill.mutateAsync({id: bill.id})
+      toast({
+        title: "Success",
+        description: "Bill deleted successfully",
+        className: "bg-green-500 text-white",
+      })
       router.refresh()
     } catch (error) {
       console.error("Failed to delete bill:", error)
+      toast({
+        title: "Error",
+        description: "Failed to delete bill. Please try again.",
+        variant: "destructive",
+      })
     }
   }
 
@@ -41,7 +53,12 @@ export function BillActions({ bill, billTypes }: BillActionsProps) {
           <DialogHeader>
             <DialogTitle>Edit Utility Bill</DialogTitle>
           </DialogHeader>
-          <BillForm initialData={bill} userId={bill.userId} billTypes={billTypes} />
+          <BillForm 
+            initialData={bill} 
+            userId={bill.userId} 
+            billTypes={billTypes} 
+            onSuccess={() => setIsEditing(false)}
+          />
         </DialogContent>
       </Dialog>
       <Button 

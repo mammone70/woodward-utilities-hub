@@ -10,12 +10,13 @@ import { TBillTypes } from "@/schemas/bill-types-schemas"
 import { useBills } from "@/hooks/use-bills"
 
 interface BillsTableProps {
+  userId: number
   initialBills: TBill[]
   initialBillTypes: TBillTypes[]
 }
 
-export function BillsTable({ initialBills, initialBillTypes }: BillsTableProps) {
-  const { bills, isLoading } = useBills(initialBills[0]?.userId || 0)
+export function BillsTable({ userId, initialBills, initialBillTypes }: BillsTableProps) {
+  const { bills, isLoading } = useBills(userId, initialBills)
 
   return (
     <Card>
@@ -31,8 +32,8 @@ export function BillsTable({ initialBills, initialBillTypes }: BillsTableProps) 
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Type</TableHead>
                 <TableHead>Date</TableHead>
+                <TableHead>Type</TableHead>
                 <TableHead>Amount</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Actions</TableHead>
@@ -43,13 +44,17 @@ export function BillsTable({ initialBills, initialBillTypes }: BillsTableProps) 
                 <TableRow>
                   <TableCell colSpan={5} className="text-center">Loading...</TableCell>
                 </TableRow>
+              ) : bills.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center">No payments recorded</TableCell>
+                </TableRow>
               ) : (
                 bills.map((bill: TBill) => (
                   <TableRow key={bill.id}>
-                    <TableCell className="font-medium">
+                      <TableCell>{bill.dateIssued.toLocaleDateString("en-US", { timeZone: "UTC" })}</TableCell>
+                      <TableCell className="font-medium">
                       {initialBillTypes.find(type => type.id === bill.typeId)?.name || 'Unknown'}
-                    </TableCell>
-                    <TableCell>{new Date(bill.dateIssued).toLocaleDateString()}</TableCell>
+                    </TableCell>                    
                     <TableCell>${Number(bill.amount).toFixed(2)}</TableCell>
                     <TableCell>
                       <Badge variant={bill.paid ? "default" : "destructive"}>{bill.paid ? "Paid" : "Unpaid"}</Badge>

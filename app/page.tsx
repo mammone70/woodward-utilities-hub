@@ -1,37 +1,28 @@
-import { Plus, DollarSign, Receipt, Users } from "lucide-react"
+import { Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { BillForm } from "@/components/bill-form"
-import { PaymentForm } from "@/components/payment-form"
 import { StatsCards } from "@/components/stats-cards"
 import Link from "next/link"
-import { BillActions } from "@/components/bill-actions"
 import { getBillsByUserIdAction } from "@/actions/bills"
-import { getBillTypes } from "@/app/actions/bill-types"
-import { TBill } from "@/schemas/bills-schemas"
+import { getBillTypes } from "@/actions/bill-types"
+import { getPaymentsByUserIdAction } from "@/actions/payments"
 import { Providers } from "./providers"
 import { BillsTable } from "@/components/bills-table"
+import { PaymentsTable } from "@/components/payments-table"
+import { ActionButtons } from "@/components/action-buttons"
 
 // TODO: Replace with actual user ID from auth
 const CURRENT_USER_ID = 1
 
 export default async function Dashboard() {
+  const [billsResult, billTypesResult, paymentsResult] = await Promise.all([
+    getBillsByUserIdAction({ userId: CURRENT_USER_ID }),
+    getBillTypes(),
+    getPaymentsByUserIdAction({ userId: CURRENT_USER_ID })
+  ])
 
-  const billsResult = await getBillsByUserIdAction({userId: CURRENT_USER_ID})
-  
-  
-  const bills: TBill[] = billsResult
-  
-  // const payments = await getPaymentsByUserId(CURRENT_USER_ID)
-  const payments: any[] = []
-
-  const { data: billTypes, error: billTypesError } = await getBillTypes()
-  if (billTypesError) {
-    console.error("Failed to fetch bill types:", billTypesError)
-  }
+  const bills = billsResult
+  const billTypes = billTypesResult.data || []
+  const payments = paymentsResult
 
   return (
     <Providers>
@@ -57,74 +48,12 @@ export default async function Dashboard() {
           <StatsCards />
           
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 mb-6">
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button className="flex items-center gap-2">
-                  <Plus className="h-4 w-4" />
-                  Add New Bill
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Add New Utility Bill</DialogTitle>
-                </DialogHeader>
-                <BillForm userId={CURRENT_USER_ID} billTypes={billTypes || []} />
-              </DialogContent>
-            </Dialog>
+          <ActionButtons userId={CURRENT_USER_ID} billTypes={billTypes} />
 
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="outline" className="flex items-center gap-2">
-                  <DollarSign className="h-4 w-4" />
-                  Record Payment
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Record Tenant Payment</DialogTitle>
-                </DialogHeader>
-                <PaymentForm onSubmit={() => {}} />
-              </DialogContent>
-            </Dialog>
-          </div>
-
+          {/* Tables Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Bills Table */}
-            <BillsTable initialBills={bills} initialBillTypes={billTypes || []} />
-
-            {/* Payments Table */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <DollarSign className="h-5 w-5" />
-                  Payments
-                </CardTitle>
-                <CardDescription>Track all tenant payments</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Date</TableHead>
-                        <TableHead>Amount</TableHead>
-                        <TableHead>Description</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {payments.map((payment) => (
-                        <TableRow key={payment.id}>
-                          <TableCell>{new Date(payment.date).toLocaleDateString()}</TableCell>
-                          <TableCell>${Number(payment.amount).toFixed(2)}</TableCell>
-                          <TableCell>{payment.description}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </CardContent>
-            </Card>
+            <BillsTable userId={CURRENT_USER_ID} initialBills={bills} initialBillTypes={billTypes} />
+            <PaymentsTable userId={CURRENT_USER_ID} initialPayments={payments} />
           </div>
         </div>
       </div>

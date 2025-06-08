@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import { getBillTypes } from "@/app/actions/bill-types"
+import { getBillTypes } from "@/actions/bill-types"
 
 export function useBillTypes() {
     return useQuery({
