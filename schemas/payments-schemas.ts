@@ -3,8 +3,8 @@ import { z } from "zod"
 export type TPayment = {
     id: number;
     userId: number;
-    date: Date;
-    amount: number;
+    date: string;
+    amount: string;
     description: string;
     createdAt: Date;
     updatedAt: Date;

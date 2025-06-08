@@ -9,8 +9,9 @@ import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
 import { TPayment } from "@/schemas/payments-schemas"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { PaymentForm } from "@/components/payment-form"
+import { TableFilters } from "./table-filters"
 
 interface PaymentsTableProps {
   userId: number
@@ -22,6 +23,28 @@ export function PaymentsTable({ userId, initialPayments }: PaymentsTableProps) {
   const { toast } = useToast()
   const router = useRouter()
   const [editingPayment, setEditingPayment] = useState<TPayment | undefined>()
+  const [dateRange, setDateRange] = useState<{ from: Date | undefined; to: Date | undefined }>({
+    from: new Date(),
+    to: new Date(),
+  })
+  const [searchQuery, setSearchQuery] = useState("")
+
+  const filteredPayments = useMemo(() => {
+    return payments.filter((payment) => {
+      const paymentDate = new Date(payment.date)
+      const matchesDateRange =
+        (!dateRange.from || paymentDate >= dateRange.from) &&
+        (!dateRange.to || paymentDate <= dateRange.to)
+
+      const searchLower = searchQuery.toLowerCase()
+      const matchesSearch =
+        !searchQuery ||
+        payment.description.toLowerCase().includes(searchLower) ||
+        payment.amount.toString().includes(searchLower)
+
+      return matchesDateRange && matchesSearch
+    })
+  }, [payments, dateRange, searchQuery])
 
   const handleDelete = async (id: number) => {
     try {
@@ -50,9 +73,16 @@ export function PaymentsTable({ userId, initialPayments }: PaymentsTableProps) {
             <DollarSign className="h-5 w-5" />
             Payments
           </CardTitle>
-          <CardDescription>Track all tenant payments</CardDescription>
+          <CardDescription>All payments made</CardDescription>
         </CardHeader>
         <CardContent>
+          <TableFilters
+            dateRange={dateRange}
+            onDateRangeChange={setDateRange}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            showBillTypeFilter={false}
+          />
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
@@ -68,14 +98,14 @@ export function PaymentsTable({ userId, initialPayments }: PaymentsTableProps) {
                   <TableRow>
                     <TableCell colSpan={4} className="text-center">Loading...</TableCell>
                   </TableRow>
-                ) : payments.length === 0 ? (
+                ) : filteredPayments.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={4} className="text-center">No payments recorded</TableCell>
+                    <TableCell colSpan={4} className="text-center">No payments found</TableCell>
                   </TableRow>
                 ) : (
-                  payments.map((payment) => (
+                  filteredPayments.map((payment) => (
                     <TableRow key={payment.id}>
-                      <TableCell>{payment.date.toLocaleDateString("en-US", { timeZone: "UTC" })}</TableCell>
+                      <TableCell>{new Date(payment.date).toLocaleDateString("en-US", { timeZone: "UTC" })}</TableCell>
                       <TableCell>${Number(payment.amount).toFixed(2)}</TableCell>
                       <TableCell>{payment.description}</TableCell>
                       <TableCell>

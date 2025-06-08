@@ -4,7 +4,7 @@ export type TBill = {
     id: number;
     userId: number;
     typeId: number;
-    dateIssued: Date;
+    dateIssued: string;
     amount: string;
     paid: boolean;
     createdAt: Date;

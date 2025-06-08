@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { StatsCards } from "@/components/stats-cards"
 import Link from "next/link"
 import { getBillsByUserIdAction } from "@/actions/bills"
-import { getBillTypes } from "@/actions/bill-types"
+import { getBillTypesAction } from "@/actions/bill-types"
 import { getPaymentsByUserIdAction } from "@/actions/payments"
 import { Providers } from "./providers"
 import { BillsTable } from "@/components/bills-table"
@@ -16,12 +16,12 @@ const CURRENT_USER_ID = 1
 export default async function Dashboard() {
   const [billsResult, billTypesResult, paymentsResult] = await Promise.all([
     getBillsByUserIdAction({ userId: CURRENT_USER_ID }),
-    getBillTypes(),
+    getBillTypesAction(),
     getPaymentsByUserIdAction({ userId: CURRENT_USER_ID })
   ])
 
   const bills = billsResult
-  const billTypes = billTypesResult.data || []
+  const billTypes = billTypesResult
   const payments = paymentsResult
 
   return (

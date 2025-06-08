@@ -11,7 +11,7 @@ export const addBill = async (userId: number, typeId: number, dateIssued: string
     const result = await db.insert(bills).values({
         userId,
         typeId,
-        dateIssued: new Date(dateIssued),
+        dateIssued: dateIssued,
         amount,
         paid,
     })
@@ -21,7 +21,7 @@ export const addBill = async (userId: number, typeId: number, dateIssued: string
 export const updateBill = async (id: number, typeId: number, dateIssued: string, amount: string, paid: boolean) => {
     const result = await db.update(bills).set({
         typeId,
-        dateIssued: new Date(dateIssued),
+        dateIssued: dateIssued,
         amount,
         paid,
     }).where(eq(bills.id, id))

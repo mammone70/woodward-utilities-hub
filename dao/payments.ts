@@ -10,8 +10,8 @@ export const getPaymentsByUserId = async (userId: number) => {
 export const addPayment = async (userId: number, date: string, amount: number, description: string) => {
     const result = await db.insert(payments).values({
         userId,
-        date: new Date(date),
-        amount,
+        date: date,
+        amount : amount.toString(),
         description,
     })
     return result[0];
@@ -19,8 +19,8 @@ export const addPayment = async (userId: number, date: string, amount: number, d
 
 export const updatePayment = async (id: number, date: string, amount: number, description: string) => {
     const result = await db.update(payments).set({
-        date: new Date(date),
-        amount,
+        date: date,
+        amount : amount.toString(),
         description,
     }).where(eq(payments.id, id))
     return result[0];
