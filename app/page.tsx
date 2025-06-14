@@ -9,6 +9,7 @@ import { Providers } from "./providers"
 import { BillsTable } from "@/components/bills-table"
 import { PaymentsTable } from "@/components/payments-table"
 import { ActionButtons } from "@/components/action-buttons"
+import { SignOutButton } from "@/components/auth/sign-out-button"
 
 // TODO: Replace with actual user ID from auth
 const CURRENT_USER_ID = 1
@@ -41,6 +42,7 @@ export default async function Dashboard() {
                   Tenant View
                 </Button>
               </Link>
+              <SignOutButton />
             </div>
           </div>
 

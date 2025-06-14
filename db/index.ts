@@ -1,6 +1,5 @@
 import { drizzle } from "drizzle-orm/postgres-js"
 import postgres from "postgres"
-import { users } from "./schemas/users"
 import { bills } from "./schemas/bills"
 import { payments } from "./schemas/payments"
 import { billTypes } from "./schemas/bill-types"
@@ -20,7 +19,6 @@ const client = postgres(
 export const db = drizzle(client,
     {
         schema: {
-            users,
             bills,
             payments,
             billTypes

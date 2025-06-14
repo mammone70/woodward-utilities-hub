@@ -1,9 +1,8 @@
 import { integer, date, numeric, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
-import { users } from "./users";
 
 export const payments = pgTable("payments", {
     id: serial("id").primaryKey(),
-    userId: integer("user_id").references(() => users.id).notNull(),
+    userId: integer("user_id").notNull(),
     date: date("date").notNull(),
     amount:
         numeric({

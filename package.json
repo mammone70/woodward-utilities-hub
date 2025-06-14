@@ -52,6 +52,7 @@
     "drizzle-kit": "^0.31.1",
     "drizzle-orm": "^0.44.2",
     "embla-carousel-react": "8.5.1",
+    "framer-motion": "^12.18.1",
     "input-otp": "1.4.1",
     "lucide-react": "^0.454.0",
     "next": "15.2.4",
@@ -68,7 +69,8 @@
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "latest",
-    "zod": "^3.25.53"
+    "zod": "^3.25.53",
+    "zustand": "^5.0.5"
   },
   "devDependencies": {
     "@types/node": "^22",

@@ -1,10 +1,9 @@
 import { boolean, date, integer, numeric, pgTable, serial, timestamp } from "drizzle-orm/pg-core";
-import { users } from "./users";
 import { billTypes } from "./bill-types";
 
 export const bills = pgTable("bills", {
     id: serial("id").primaryKey(),
-    userId: integer("user_id").references(() => users.id).notNull(),
+    userId: integer("user_id").notNull(),
     typeId: integer("type_id").references(() => billTypes.id).notNull(),
     dateIssued: date("date_issued").notNull(),
     amount:
