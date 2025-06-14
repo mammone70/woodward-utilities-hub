@@ -15,6 +15,13 @@
       "when": 1749930974330,
       "tag": "0001_jazzy_matthew_murdock",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1749933810693,
+      "tag": "0002_remove-fk",
+      "breakpoints": true
     }
   ]
 }

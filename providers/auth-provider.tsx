@@ -21,22 +21,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (session) {
           // Get user data including role from our users table
-          const { data: userData, error } = await supabase.from("users").select("*").eq("id", session.user.id).single()
-
-          if (error) {
-            console.error("Error fetching user data:", error)
-            setUser(null)
-          } else {
+          // const { data: userData, error } = await supabase.from("users").select("*").eq("id", session.user.id).single()
+            // if (error) {
+          //   console.error("Error fetching user data:", error)
+          //   setUser(null)
+          // } else {
             setUser({
-              id: userData.id,
-              email: userData.email,
-              displayName: userData.display_name,
-              avatarUrl: userData.avatar_url,
-              role: userData.role,
-              createdAt: userData.created_at,
-              updatedAt: userData.updated_at,
+              id: session.user.id,
+              email: session.user.email ?? "",
+              displayName: session.user.identities?.[0]?.identity_data?.name,
+              avatarUrl: session.user.user_metadata.avatar_url,
+              role: session.user.identities?.[0]?.identity_data?.role,
+              createdAt: session.user.created_at,
+              updatedAt: session.user.updated_at ?? "",
             })
-          }
         } else {
           setUser(null)
         }
@@ -56,19 +54,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (session) {
         // Get user data including role from our users table
-        const { data: userData, error } = await supabase.from("users").select("*").eq("id", session.user.id).single()
-
-        if (!error) {
+        // const { data: userData, error } = await supabase.from("users").select("*").eq("id", session.user.id).single()
+      
+        // if (!error) {
           setUser({
-            id: userData.id,
-            email: userData.email,
-            displayName: userData.display_name,
-            avatarUrl: userData.avatar_url,
-            role: userData.role,
-            createdAt: userData.created_at,
-            updatedAt: userData.updated_at,
+            id: session.user.id,
+            email: session.user.email ?? "",
+            displayName: session.user.identities?.[0]?.identity_data?.name,
+            avatarUrl: session.user.user_metadata.avatar_url,
+            role: session.user.identities?.[0]?.identity_data?.role,
+            createdAt: session.user.created_at,
+            updatedAt: session.user.updated_at ?? "",
           })
-        }
+        // }
       } else {
         setUser(null)
       }
