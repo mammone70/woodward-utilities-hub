@@ -25,16 +25,14 @@ export function SignOutButton() {
         }
     }
 
-    console.log(user)
-    //  if (!user) return null
+    if (!user) return null
 
     return (
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button
                 onClick={handleSignOut}
                 disabled={isLoading}
-                variant="outline"
-                className="border-amber-600 text-amber-100 hover:bg-amber-800 hover:text-amber-100"
+                variant="default"
             >
                 Sign Out
             </Button>
