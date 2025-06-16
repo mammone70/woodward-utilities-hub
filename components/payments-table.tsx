@@ -12,13 +12,16 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { useState, useMemo } from "react"
 import { PaymentForm } from "@/components/payment-form"
 import { TableFilters } from "./table-filters"
+import { useAuthStore } from "@/lib/store/use-auth-store"
 
 interface PaymentsTableProps {
   userId: number
   initialPayments: TPayment[]
+  readOnly?: boolean
 }
 
-export function PaymentsTable({ userId, initialPayments }: PaymentsTableProps) {
+export function PaymentsTable({ userId, initialPayments, readOnly = false }: PaymentsTableProps) {
+  const { user } = useAuthStore()
   const { payments, isLoading, deletePayment } = usePayments(userId, initialPayments)
   const { toast } = useToast()
   const router = useRouter()
@@ -28,6 +31,8 @@ export function PaymentsTable({ userId, initialPayments }: PaymentsTableProps) {
     to: new Date(),
   })
   const [searchQuery, setSearchQuery] = useState("")
+
+  const showActions = user && !readOnly
 
   const filteredPayments = useMemo(() => {
     return payments.filter((payment) => {
@@ -90,17 +95,17 @@ export function PaymentsTable({ userId, initialPayments }: PaymentsTableProps) {
                   <TableHead>Date</TableHead>
                   <TableHead>Amount</TableHead>
                   <TableHead>Description</TableHead>
-                  <TableHead>Actions</TableHead>
+                  {showActions && <TableHead>Actions</TableHead>}
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {isLoading ? (
                   <TableRow>
-                    <TableCell colSpan={4} className="text-center">Loading...</TableCell>
+                    <TableCell colSpan={showActions ? 4 : 3} className="text-center">Loading...</TableCell>
                   </TableRow>
                 ) : filteredPayments.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={4} className="text-center">No payments found</TableCell>
+                    <TableCell colSpan={showActions ? 4 : 3} className="text-center">No payments found</TableCell>
                   </TableRow>
                 ) : (
                   filteredPayments.map((payment) => (
@@ -108,25 +113,27 @@ export function PaymentsTable({ userId, initialPayments }: PaymentsTableProps) {
                       <TableCell>{new Date(payment.date).toLocaleDateString("en-US", { timeZone: "UTC" })}</TableCell>
                       <TableCell>${Number(payment.amount).toFixed(2)}</TableCell>
                       <TableCell>{payment.description}</TableCell>
-                      <TableCell>
-                        <div className="flex gap-2">
-                          <Button 
-                            variant="ghost" 
-                            size="icon" 
-                            onClick={() => setEditingPayment(payment)}
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button 
-                            variant="ghost" 
-                            size="icon" 
-                            onClick={() => handleDelete(payment.id)}
-                            disabled={deletePayment.isPending}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
+                      {showActions && (
+                        <TableCell>
+                          <div className="flex gap-2">
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              onClick={() => setEditingPayment(payment)}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              onClick={() => handleDelete(payment.id)}
+                              disabled={deletePayment.isPending}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      )}
                     </TableRow>
                   ))
                 )}

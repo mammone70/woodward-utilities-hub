@@ -10,15 +10,17 @@ import { TBillType } from "@/schemas/bill-types-schemas"
 import { useBills } from "@/hooks/use-bills"
 import { useState, useMemo } from "react"
 import { TableFilters } from "./table-filters"
+import { useAuthStore } from "@/lib/store/use-auth-store"
 
 interface BillsTableProps {
   userId: number
   initialBills: TBill[]
   initialBillTypes: TBillType[]
+  readOnly?: boolean
 }
 
-export function BillsTable({ userId, initialBills, initialBillTypes }: BillsTableProps) {
-  
+export function BillsTable({ userId, initialBills, initialBillTypes, readOnly = false }: BillsTableProps) {
+  const { user } = useAuthStore()
   const { bills, isLoading } = useBills(userId, initialBills)
   const [dateRange, setDateRange] = useState<{ from: Date | undefined; to: Date | undefined }>({
     from: undefined,
@@ -26,6 +28,8 @@ export function BillsTable({ userId, initialBills, initialBillTypes }: BillsTabl
   })
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedBillType, setSelectedBillType] = useState("all")
+
+  const showActions = user && !readOnly
 
   const filteredBills = useMemo(() => {
     return bills.filter((bill) => {
@@ -76,17 +80,17 @@ export function BillsTable({ userId, initialBills, initialBillTypes }: BillsTabl
                 <TableHead>Type</TableHead>
                 <TableHead>Amount</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Actions</TableHead>
+                {showActions && <TableHead>Actions</TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoading ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center">Loading...</TableCell>
+                  <TableCell colSpan={showActions ? 5 : 4} className="text-center">Loading...</TableCell>
                 </TableRow>
               ) : filteredBills.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center">No bills found</TableCell>
+                  <TableCell colSpan={showActions ? 5 : 4} className="text-center">No bills found</TableCell>
                 </TableRow>
               ) : (
                 filteredBills.map((bill: TBill) => (
@@ -99,9 +103,11 @@ export function BillsTable({ userId, initialBills, initialBillTypes }: BillsTabl
                     <TableCell>
                       <Badge variant={bill.paid ? "default" : "destructive"}>{bill.paid ? "Paid" : "Unpaid"}</Badge>
                     </TableCell>
-                    <TableCell>
-                      <BillActions bill={bill} billTypes={initialBillTypes} />
-                    </TableCell>
+                    {showActions && (
+                      <TableCell>
+                        <BillActions bill={bill} billTypes={initialBillTypes} />
+                      </TableCell>
+                    )}
                   </TableRow>
                 ))
               )}

@@ -7,6 +7,7 @@ import { BillForm } from "@/components/bill-form"
 import { PaymentForm } from "@/components/payment-form"
 import { TBillTypes } from "@/schemas/bill-types-schemas"
 import { useState } from "react"
+import { useAuthStore } from "@/lib/store/use-auth-store"
 
 interface ActionButtonsProps {
   userId: number
@@ -14,8 +15,11 @@ interface ActionButtonsProps {
 }
 
 export function ActionButtons({ userId, billTypes }: ActionButtonsProps) {
+  const { user } = useAuthStore()
   const [isAddingBill, setIsAddingBill] = useState(false)
   const [isAddingPayment, setIsAddingPayment] = useState(false)
+
+  if (!user) return null
 
   return (
     <div className="flex flex-col sm:flex-row gap-4 mb-6">
