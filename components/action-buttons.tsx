@@ -5,13 +5,13 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { BillForm } from "@/components/bill-form"
 import { PaymentForm } from "@/components/payment-form"
-import { TBillTypes } from "@/schemas/bill-types-schemas"
+import { TBillType } from "@/schemas/bill-types-schemas"
 import { useState } from "react"
 import { useAuthStore } from "@/lib/store/use-auth-store"
 
 interface ActionButtonsProps {
   userId: number
-  billTypes: TBillTypes[]
+  billTypes: TBillType[]
 }
 
 export function ActionButtons({ userId, billTypes }: ActionButtonsProps) {

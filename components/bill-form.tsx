@@ -8,7 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { TBill } from "@/schemas/bills-schemas"
-import { TBillTypes } from "@/schemas/bill-types-schemas"
+import { TBillType } from "@/schemas/bill-types-schemas"
 import { useBills } from "@/hooks/use-bills"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
@@ -25,7 +25,7 @@ type BillFormValues = z.infer<typeof billFormSchema>
 interface BillFormProps {
   initialData?: TBill
   userId?: number
-  billTypes: TBillTypes[]
+  billTypes: TBillType[]
   onSuccess?: () => void
 }
 

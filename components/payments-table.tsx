@@ -4,6 +4,17 @@ import { DollarSign, Trash2, Edit } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
+import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 import { usePayments } from "@/hooks/use-payments"
 import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
@@ -123,14 +134,31 @@ export function PaymentsTable({ userId, initialPayments, readOnly = false }: Pay
                             >
                               <Edit className="h-4 w-4" />
                             </Button>
-                            <Button 
-                              variant="ghost" 
-                              size="icon" 
-                              onClick={() => handleDelete(payment.id)}
-                              disabled={deletePayment.isPending}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button 
+                                  variant="ghost" 
+                                  size="icon"
+                                  disabled={deletePayment.isPending}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    This action cannot be undone. This will permanently delete the payment of ${Number(payment.amount).toFixed(2)} made on {new Date(payment.date).toLocaleDateString("en-US", { timeZone: "UTC" })}.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <AlertDialogAction onClick={() => handleDelete(payment.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                                    Delete Payment
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
                           </div>
                         </TableCell>
                       )}
