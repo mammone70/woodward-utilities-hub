@@ -35,13 +35,8 @@ export default async function App() {
         {/* Header */}
         <div className="flex items-center justify-between gap-4 mb-8">
           <div className="flex items-center gap-4">
-            <Link href="/admin">
-              <Button variant="ghost" size="icon">
-                <ArrowLeft className="h-4 w-4" />
-              </Button>
-            </Link>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Tenant Portal</h1>
+              <h1 className="text-3xl font-bold text-gray-900">Woodward Utilities</h1>
               <p className="text-gray-600 mt-2">View your utility bills and payment status</p>
             </div>
           </div>
