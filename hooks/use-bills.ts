@@ -42,16 +42,16 @@ export function useBills(userId: number, initialData?: TBill[]) {
     //   }
     
     /* Bill Stats */
-    const { totalBills, totalPayments, balance, billCount, unpaidBills, isLoading } = useMemo(() => {
+    const { totalBills, billCount, unpaidBills } = useMemo(() => {
         return {
             totalBills : billsQuery.data?.filter((bill) => !bill.paid).reduce((acc, bill) => acc + parseFloat(bill.amount), 0) ?? 0,
-            totalPayments : billsQuery.data?.filter((bill) => bill.paid).reduce((acc, bill) => acc + parseFloat(bill.amount), 0) ?? 0,
-            balance : 
-                (billsQuery.data?.reduce(
-                    (acc, bill) => acc + (bill.paid ? parseFloat(bill.amount) : 0), 0) ?? 0) 
-                    - 
-                (billsQuery.data?.reduce(
-                    (acc, bill) => acc + (bill.paid ? 0 : parseFloat(bill.amount)), 0) ?? 0),
+            // totalPayments : billsQuery.data?.filter((bill) => bill.paid).reduce((acc, bill) => acc + parseFloat(bill.amount), 0) ?? 0,
+            // balance : 
+            //     (billsQuery.data?.reduce(
+            //         (acc, bill) => acc + (bill.paid ? parseFloat(bill.amount) : 0), 0) ?? 0) 
+            //         - 
+            //     (billsQuery.data?.reduce(
+            //         (acc, bill) => acc + (bill.paid ? 0 : parseFloat(bill.amount)), 0) ?? 0),
             billCount : billsQuery.data?.length ?? 0,
             unpaidBills : billsQuery.data?.filter((bill) => !bill.paid).length ?? 0,
             isLoading: billsQuery.isLoading
@@ -65,8 +65,8 @@ export function useBills(userId: number, initialData?: TBill[]) {
         updateBill,
         deleteBill,
         totalBills,
-        totalPayments,
-        balance,
+        // totalPayments,
+        // balance,
         billCount,
         unpaidBills
     }

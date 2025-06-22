@@ -3,10 +3,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useBills } from "@/hooks/use-bills"
 import { Receipt, DollarSign, TrendingUp, FileText } from "lucide-react"
 import StatsCardsSkeletons from "./stats-cards-skeletons";
+import { usePayments } from "@/hooks/use-payments";
 
 
 export function StatsCards() {
-  const { totalBills, totalPayments, balance, billCount, isLoading } = useBills(1);
+  const { totalBills, billCount, isLoading } = useBills(1);
+  const { totalPayments } = usePayments(1);
+  const balance = totalBills - totalPayments;
+  
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
       <Card>
