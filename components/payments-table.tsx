@@ -38,8 +38,8 @@ export function PaymentsTable({ userId, initialPayments, readOnly = false }: Pay
   const router = useRouter()
   const [editingPayment, setEditingPayment] = useState<TPayment | undefined>()
   const [dateRange, setDateRange] = useState<{ from: Date | undefined; to: Date | undefined }>({
-    from: new Date(),
-    to: new Date(),
+    from: undefined,
+    to: undefined,
   })
   const [searchQuery, setSearchQuery] = useState("")
 
@@ -47,10 +47,14 @@ export function PaymentsTable({ userId, initialPayments, readOnly = false }: Pay
 
   const filteredPayments = useMemo(() => {
     return payments.filter((payment) => {
-      const paymentDate = new Date(payment.date)
+      console.log(payment.date)
+      const paymentDate = new Date(new Date(payment.date).toLocaleDateString("en-US", { timeZone: "UTC" }))
+      console.log(dateRange)
+      console.log(paymentDate)
       const matchesDateRange =
-        (!dateRange.from || paymentDate >= dateRange.from) &&
-        (!dateRange.to || paymentDate <= dateRange.to)
+        dateRange &&
+          (!dateRange.from || paymentDate >= dateRange.from) &&
+          (!dateRange.to || paymentDate <= dateRange.to)
 
       const searchLower = searchQuery.toLowerCase()
       const matchesSearch =

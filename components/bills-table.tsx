@@ -33,7 +33,7 @@ export function BillsTable({ userId, initialBills, initialBillTypes, readOnly = 
 
   const filteredBills = useMemo(() => {
     return bills.filter((bill) => {
-      const billDate = new Date(bill.dateIssued)
+      const billDate = new Date(new Date(bill.dateIssued).toLocaleDateString("en-US", { timeZone: "UTC" }))
       const matchesDateRange =
         dateRange &&
         (!dateRange.from || billDate >= dateRange.from) &&
