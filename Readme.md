@@ -5,3 +5,4 @@
 [x] Paid bill counting towards payment
 [x] Dates still screwed up
 [] Fix queries by user id (useBill, etc)
+[] Sort bills/payments by date

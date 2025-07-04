@@ -47,10 +47,7 @@ export function PaymentsTable({ userId, initialPayments, readOnly = false }: Pay
 
   const filteredPayments = useMemo(() => {
     return payments.filter((payment) => {
-      console.log(payment.date)
       const paymentDate = new Date(new Date(payment.date).toLocaleDateString("en-US", { timeZone: "UTC" }))
-      console.log(dateRange)
-      console.log(paymentDate)
       const matchesDateRange =
         dateRange &&
           (!dateRange.from || paymentDate >= dateRange.from) &&
