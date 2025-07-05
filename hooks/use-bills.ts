@@ -37,7 +37,7 @@ export function useBills(userId: number, initialData?: TBill[]) {
     /* Bill Stats */
     const { totalBills, billCount, unpaidBills } = useMemo(() => {
         return {
-            totalBills : billsQuery.data?.filter((bill) => !bill.paid).reduce((acc, bill) => acc + parseFloat(bill.amount), 0) ?? 0,
+            totalBills : billsQuery.data?.reduce((acc, bill) => acc + parseFloat(bill.amount), 0) ?? 0,
             billCount : billsQuery.data?.length ?? 0,
             unpaidBills : billsQuery.data?.filter((bill) => !bill.paid).length ?? 0,
             isLoading: billsQuery.isLoading
