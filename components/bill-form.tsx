@@ -31,7 +31,7 @@ interface BillFormProps {
 
 export function BillForm({ initialData, userId, billTypes, onSuccess }: BillFormProps) {
   const router = useRouter()
-  const { addBill, updateBill } = useBills(userId!)
+  const { addBill, updateBill } = useBills({userId: userId!})
   const { toast } = useToast()
 
   const form = useForm<BillFormValues>({

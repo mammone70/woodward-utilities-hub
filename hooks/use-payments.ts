@@ -3,7 +3,12 @@ import { getPaymentsByUserIdAction, addPaymentAction, updatePaymentAction, delet
 import { TPayment } from "@/schemas/payments-schemas"
 import { useMemo } from "react"
 
-export function usePayments(userId: number, initialData?: TPayment[]) {
+export interface UsePaymentsProps {
+    userId: number;
+    initialData? : TPayment[];
+}
+
+export function usePayments({ userId, initialData }: UsePaymentsProps) {
     const queryClient = useQueryClient()
 
     const paymentsQuery = useQuery({

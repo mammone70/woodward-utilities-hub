@@ -1,15 +1,24 @@
 import { StatsCards } from "@/components/stats-cards"
-import { BillsTable } from "@/components/bills-table"
-import { PaymentsTable } from "@/components/payments-table"
 import { SignOutButton } from "@/components/auth/sign-out-button"
 import BalanceBanner from "@/components/balance-banner"
-import { usePayments } from "@/hooks/use-payments"
-import { useBills } from "@/hooks/use-bills"
-import { useBillTypes } from "@/hooks/use-bill-types"
 import TablesGrid from "@/components/tables-grid"
+import { getBillsByUserIdAction } from "@/actions/bills";
+import { getBillTypesAction } from "@/actions/bill-types";
+import { getPaymentsByUserIdAction } from "@/actions/payments";
 
+const CURRENT_USER_ID = 1
 
 export default async function App() {
+  const [billsResult, billTypesResult, paymentsResult] = await Promise.all([
+    getBillsByUserIdAction({ userId: CURRENT_USER_ID }),
+    getBillTypesAction(),
+    getPaymentsByUserIdAction({ userId: CURRENT_USER_ID })
+  ])
+
+  const billTypes = billTypesResult
+  const payments = paymentsResult
+  const bills = billsResult
+
   
   return (
     <div className="min-h-screen bg-gray-50">
@@ -28,7 +37,11 @@ export default async function App() {
         <StatsCards />
 
         {/* Tables Grid */}
-        <TablesGrid />
+        <TablesGrid 
+          readonly={true} 
+          initialBills={bills} 
+          initialPayments={payments} 
+          initialBillTypes={billTypes} />
       </div>
   )
 }

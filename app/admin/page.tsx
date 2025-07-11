@@ -10,20 +10,15 @@ import { BillsTable } from "@/components/bills-table"
 import { PaymentsTable } from "@/components/payments-table"
 import { ActionButtons } from "@/components/action-buttons"
 import { SignOutButton } from "@/components/auth/sign-out-button"
+import TablesGrid from "@/components/tables-grid"
 
 // TODO: Replace with actual user ID from auth
 const CURRENT_USER_ID = 1
 
 export default async function AdminDashboard() {
-  const [billsResult, billTypesResult, paymentsResult] = await Promise.all([
-    getBillsByUserIdAction({ userId: CURRENT_USER_ID }),
-    getBillTypesAction(),
-    getPaymentsByUserIdAction({ userId: CURRENT_USER_ID })
-  ])
-
-  const bills = billsResult
-  const billTypes = billTypesResult
-  const payments = paymentsResult
+  const billTypes = await getBillTypesAction();
+  const payments = await getPaymentsByUserIdAction({ userId: CURRENT_USER_ID });
+  const bills = await getBillsByUserIdAction({ userId: CURRENT_USER_ID });
 
   return (
     <Providers>
@@ -53,10 +48,11 @@ export default async function AdminDashboard() {
           <ActionButtons userId={CURRENT_USER_ID} billTypes={billTypes} />
 
           {/* Tables Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <BillsTable userId={CURRENT_USER_ID} initialBills={bills} initialBillTypes={billTypes} />
-            <PaymentsTable userId={CURRENT_USER_ID} initialPayments={payments} />
-          </div>
+          <TablesGrid 
+            readonly={false} 
+            initialBills={bills} 
+            initialPayments={payments} 
+            initialBillTypes={billTypes} />
         </div>
       </div>
     </Providers>

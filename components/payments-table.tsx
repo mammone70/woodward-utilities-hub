@@ -33,7 +33,7 @@ interface PaymentsTableProps {
 
 export function PaymentsTable({ userId, initialPayments, readOnly = false }: PaymentsTableProps) {
   const { user } = useAuthStore()
-  const { payments, isLoading, deletePayment } = usePayments(userId, initialPayments)
+  const { payments, isLoading, deletePayment } = usePayments({userId: userId, initialData: initialPayments})
   const { toast } = useToast()
   const router = useRouter()
   const [editingPayment, setEditingPayment] = useState<TPayment | undefined>()

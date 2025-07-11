@@ -3,7 +3,12 @@ import { getBillsByUserIdAction, addBillAction, updateBillAction, deleteBillActi
 import { TBill } from "@/schemas/bills-schemas"
 import { useMemo } from "react"
 
-export function useBills(userId: number, initialData?: TBill[]) {
+interface UseBillsProps {
+    userId: number;
+    initialData? : TBill[];
+}
+
+export function useBills({ userId, initialData }: UseBillsProps) {
     const queryClient = useQueryClient()
 
     const billsQuery = useQuery({

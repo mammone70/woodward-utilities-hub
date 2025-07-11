@@ -7,8 +7,8 @@ import { usePayments } from "@/hooks/use-payments";
 
 
 export function StatsCards() {
-  const { totalBills, billCount, isLoading } = useBills(1);
-  const { totalPayments } = usePayments(1);
+  const { totalBills, billCount, isLoading } = useBills({userId: 1});
+  const { totalPayments } = usePayments({userId: 1});
   const balance = totalBills - totalPayments;
   
   return (

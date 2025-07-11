@@ -21,7 +21,7 @@ interface BillsTableProps {
 
 export function BillsTable({ userId, initialBills, initialBillTypes, readOnly = false }: BillsTableProps) {
   const { user } = useAuthStore()
-  const { bills, isLoading } = useBills(userId, initialBills)
+  const { bills, isLoading } = useBills({userId: userId, initialData: initialBills})
   const [dateRange, setDateRange] = useState<{ from: Date | undefined; to: Date | undefined }>({
     from: undefined,
     to: undefined,

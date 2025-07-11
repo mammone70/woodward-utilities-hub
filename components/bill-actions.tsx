@@ -30,7 +30,7 @@ interface BillActionsProps {
 export function BillActions({ bill, billTypes }: BillActionsProps) {
   const [isEditing, setIsEditing] = useState(false)
   const router = useRouter()
-  const { deleteBill } = useBills(bill.userId)
+  const { deleteBill } = useBills({userId: bill.userId})
   const { toast } = useToast()
 
   const handleDelete = async () => {

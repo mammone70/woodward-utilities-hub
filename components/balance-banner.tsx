@@ -6,8 +6,8 @@ import { useBills } from '@/hooks/use-bills';
 import { usePayments } from '@/hooks/use-payments';
 
 export default function BalanceBanner() {
-    const { totalBills, bills, isLoading } = useBills(1);
-    const { totalPayments, payments, isLoading: paymentsLoading } = usePayments(1);
+    const { totalBills, bills, isLoading } = useBills({userId: 1});
+    const { totalPayments, payments, isLoading: paymentsLoading } = usePayments({userId: 1});
     const balance = totalBills - totalPayments;
     
 return (

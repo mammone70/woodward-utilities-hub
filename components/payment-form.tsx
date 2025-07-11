@@ -26,7 +26,7 @@ interface PaymentFormProps {
 }
 
 export function PaymentForm({ userId, initialData, onSuccess }: PaymentFormProps) {
-  const { addPayment, updatePayment } = usePayments(userId)
+  const { addPayment, updatePayment } = usePayments({userId: userId})
   const { toast } = useToast()
 
   const form = useForm<PaymentFormValues>({
@@ -59,7 +59,6 @@ export function PaymentForm({ userId, initialData, onSuccess }: PaymentFormProps
           className: "bg-green-500 text-white",
         })
       } else {
-        console.log(values.date)
         await addPayment.mutateAsync({
           userId,
           date: values.date,
