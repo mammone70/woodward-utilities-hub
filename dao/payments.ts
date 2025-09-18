@@ -1,9 +1,13 @@
 import { db } from "@/db"
 import { payments } from "@/db/schemas/payments"
-import { eq } from "drizzle-orm"
+import { desc, eq } from "drizzle-orm"
 
 export const getPaymentsByUserId = async (userId: number) => {
-    const result = await db.select().from(payments).where(eq(payments.userId, userId))
+    const result 
+        = await db.select()
+            .from(payments)
+            .orderBy(desc(payments.date))
+            .where(eq(payments.userId, userId))
     return result;
 }
 
