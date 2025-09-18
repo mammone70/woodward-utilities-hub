@@ -1,9 +1,15 @@
 import { db } from "@/db"
 import { bills } from "@/db/schemas/bills"
-import { eq } from "drizzle-orm"
+import { desc, eq } from "drizzle-orm"
 
 export const getBillsByUserId = async (userId: number) => {
-    const result = await db.select().from(bills).where(eq(bills.userId, userId))
+    const result = 
+        await db
+                .select()
+                .from(bills)
+                .orderBy(desc(bills.dateIssued))
+                .where(eq(bills.userId, userId)
+            )
     return result;
 }
 
